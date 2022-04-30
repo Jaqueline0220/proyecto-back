@@ -12,5 +12,5 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "ecotop-back"
-          heroku_email: "eduardo.diaz.268@gmail.com"
+          heroku_app_name: "back-prceng"
+          heroku_email: "jaky_202_@hotmail.com"
