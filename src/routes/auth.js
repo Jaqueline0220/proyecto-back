@@ -6,6 +6,6 @@ const validation = require('../validations/corePersona');
 /** @type {import('express').Router} */
 const router = Router();
 
-router.post('/local/login', controller.signIn);
-router.post('/', validation.create, controllerPersona.create);
+router.post('/signin', controller.signIn);
+router.post('/corePersona', validation.create, controllerPersona.create);
 module.exports = router;
