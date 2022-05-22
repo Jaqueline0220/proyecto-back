@@ -20,7 +20,7 @@ const signIn = async (req, res, next) => {
       expiresIn: env.jwt.expiresIn,
     });
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, user });
   } catch (err) {
     next(err);
   }
