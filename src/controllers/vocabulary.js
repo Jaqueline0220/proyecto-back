@@ -7,9 +7,14 @@ const mensaje = require('../helpers/mensajes');
 const create = async (req, res, next) => {
   const { body } = req;
   try {
-    const existipala = await Vocabulary.findOne({ usuario: body.usuario });
+    const existipala = await Vocabulary.findOne({
+      descripcion: body.descripcion,
+    });
     if (existipala)
-      throw new BadRequestException('La palabra o frase ya existe', 'auth');
+      throw new BadRequestException(
+        'La palabra o frase ya existe',
+        'vocabulary',
+      );
 
     const voca = await Vocabulary.create(body);
     const detalle = {
