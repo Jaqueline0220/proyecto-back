@@ -6,6 +6,7 @@ const { env } = require('../config');
 /** @type {import('mongoose').Model} */
 const Auth = require('../models/auth');
 const mensaje = require('../helpers/mensajes');
+const CorePersona = require('../models/corePersona');
 const signIn = async (req, res, next) => {
   const { body } = req;
   try {
@@ -16,9 +17,13 @@ const signIn = async (req, res, next) => {
     body.id = user.id;
     const isValid = await user.comparePassword(body.contrasenia);
     if (!isValid) throw new BadRequestException(mensaje.loginUser, 'auth');
-    const token = jwt.sign({ id: user._id }, env.jwt.secret, {
-      expiresIn: env.jwt.expiresIn,
-    });
+    const token = jwt.sign(
+      { id: user._id, idCorePersona: user.idCorePersona },
+      env.jwt.secret,
+      {
+        expiresIn: env.jwt.expiresIn,
+      },
+    );
 
     res.status(200).json({ token, user });
   } catch (err) {
@@ -29,15 +34,44 @@ const signIn = async (req, res, next) => {
 const signUp = async (req, res, next) => {
   const { body } = req;
   try {
-    const existingUser = await Auth.findOne({ usuario: body.usuario });
-    if (existingUser)
-      throw new BadRequestException('Persona no encontrada', 'auth');
-    const user = await Auth.create(body);
-    const token = jwt.sign({ id: user._id }, env.jwt.secret, {
-      expiresIn: env.jwt.expiresIn,
+    const existingUser = await CorePersona.findOne({
+      nroDocumento: body.nroDocumento,
     });
+    if (existingUser) {
+      throw new BadRequestException(
+        'El numero de documento ya existe.',
+        'corePersona',
+      );
+    }
+    const existilogin = await Auth.findOne({ usuario: body.usuario });
+    if (existilogin) {
+      throw new BadRequestException('El usuario ya existe', 'auth');
+    }
 
-    res.status(200).json({ token });
+    const user = await CorePersona.create(body);
+
+    const auth = {
+      idCorePersona: user.id,
+      usuario: body.usuario,
+      contrasenia: body.contrasenia,
+      fechaInicioSesion: body.fechaCreacion,
+      fechaCreacion: body.fechaCreacion,
+      fechaModificacion: body.fechaModificacion,
+      idUsuarioCreacion: body.idUsuarioCreacion,
+      idUsuarioModificacion: body.idUsuarioModificacion,
+    };
+
+    await Auth.create(auth);
+
+    const token = jwt.sign(
+      { id: user._id, idCorePersona: user._id },
+      env.jwt.secret,
+      {
+        expiresIn: env.jwt.expiresIn,
+      },
+    );
+
+    res.status(200).json({ token, user });
   } catch (err) {
     next(err);
   }
