@@ -9,6 +9,7 @@ const vocabularySchema = new Schema(
     descripcion: {
       type: String,
     },
+
     detalle: {
       type: String,
     },

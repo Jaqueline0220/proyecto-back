@@ -6,6 +6,7 @@ const vocabularyDetailchema = new Schema(
       type: String,
       required: true,
     },
+
     descripcion: {
       type: String,
     },
