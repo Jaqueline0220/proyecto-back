@@ -8,19 +8,15 @@ const vocabularyDetailchema = new Schema(
     },
     descripcion: {
       type: String,
-      required: true,
     },
     detalle: {
       type: String,
-      required: true,
     },
     observacion: {
       type: String,
-      required: true,
     },
     rutaImg: {
       type: String,
-      required: true,
     },
     estado: {
       type: String,
