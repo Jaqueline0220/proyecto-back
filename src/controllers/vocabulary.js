@@ -109,9 +109,19 @@ const update = async (req, res, next) => {
       new: true,
     });
     if (!voca) throw new NotFoundException(mensaje.sinresultados, 'Vocabulary');
+    const detalle = await VocabularyDetail.find();
+    var array = [];
+    if (voca != null) {
+      const result = detalle.filter((word) => word.idVocabulary == voca.id);
+      detalle.img = result;
+      array.push({
+        servicio: voca,
+        detalle: result.length > 0 ? result[0] : null,
+      });
+    }
     res.status(200).json({
       message: mensaje.updateCorrecto,
-      data: voca,
+      data: array,
     });
   } catch (err) {
     next(err);
