@@ -17,9 +17,12 @@ const create = async (req, res, next) => {
       );
 
     const voca = await Vocabulary.create(body);
+    const img = body.rutaImg.split(',');
+    const base64string = img[1];
+    const buffer = Buffer.from(base64string, 'base64');
     const detalle = {
       idVocabulary: voca.id,
-      rutaImg: body.rutaImg,
+      rutaImg: buffer,
       fechaCreacion: body.fechaCreacion,
       fechaModificacion: body.fechaModificacion,
       idUsuarioCreacion: body.idUsuarioCreacion,

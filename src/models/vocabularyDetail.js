@@ -17,7 +17,7 @@ const vocabularyDetailchema = new Schema(
       type: String,
     },
     rutaImg: {
-      type: String,
+      type: Buffer,
     },
     estado: {
       type: String,
