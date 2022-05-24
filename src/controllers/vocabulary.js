@@ -64,6 +64,37 @@ const getOne = async (req, res, next) => {
   }
 };
 
+const getAllDetalle = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const voca = await Vocabulary.find({ idCorePersona: id });
+    if (!voca) throw new NotFoundException(mensaje.sinresultados, 'Vocabulary');
+    const detalle = await VocabularyDetail.find();
+    var array = [];
+    if (voca != null) {
+      if (voca.length > 0) {
+        voca.forEach((servicio) => {
+          const result = detalle.filter(
+            (word) => word.idVocabulary == servicio.id,
+          );
+          servicio.img = result;
+          array.push({
+            servicio: servicio,
+            detalle: result.length > 0 ? result[0] : null,
+          });
+        });
+      }
+    }
+    console.log(array);
+    res.status(200).json({
+      message: mensaje.objetoEcontrado,
+      data: array,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const update = async (req, res, next) => {
   const {
     body,
@@ -104,4 +135,5 @@ module.exports = {
   getOne,
   update,
   remove,
+  getAllDetalle,
 };

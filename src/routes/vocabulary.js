@@ -12,5 +12,5 @@ router.get('/:id', controller.getOne);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.remove);
 router.post('/', controller.create);
-
+router.get('/listAll/:id', controller.getAllDetalle);
 module.exports = router;
